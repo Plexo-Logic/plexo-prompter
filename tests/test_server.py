@@ -54,6 +54,9 @@ class ServerTest(unittest.TestCase):
         response, _ = self.request("/js/main.js")
         self.assertEqual(response.getheader("Content-Type"), "text/javascript; charset=utf-8")
         self.assertIn("worker-src 'self'", response.getheader("Content-Security-Policy"))
+        # Record mode: the camera is allowed, and a take plays back from a blob: address.
+        self.assertIn("camera=(self)", response.getheader("Permissions-Policy"))
+        self.assertIn("media-src 'self' blob:", response.getheader("Content-Security-Policy"))
 
     def test_refuses_files_outside_the_app(self):
         paths = (

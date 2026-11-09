@@ -138,8 +138,8 @@ body.idle[data-view="prompt"] { cursor: none; }
 .compact .hud .clock { font-size: 15px; }
 .compact .hud .state { padding: 3px 8px; font-size: 10.5px; }
 .compact .controls { gap: 2px; padding: 6px 8px; border-radius: 18px; }
-.compact .controls .control { width: 42px; height: 42px; }
+.compact .controls .control { width: 38px; height: 42px; }
 .compact .controls .control.play { width: 50px; height: 50px; }
-.compact .controls .divider { margin: 0 2px; }
+.compact .controls .divider { display: none; } /* room for the camera button on a 375 px phone */
 .compact .readout { min-width: 46px; }
 .compact .readout span { font-size: 9px; letter-spacing: .06em; }

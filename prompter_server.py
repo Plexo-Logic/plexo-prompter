@@ -49,14 +49,15 @@ LOCAL_HOSTS = ("127.0.0.1", "localhost")
 SECURITY_HEADERS = {
     "Content-Security-Policy": (
         "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-        "connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        "connect-src 'self'; media-src 'self' blob:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; "
+        "frame-ancestors 'none'"
     ),
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "no-referrer",
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
-    "Permissions-Policy": "microphone=(self), camera=(), geolocation=()",
+    "Permissions-Policy": "microphone=(self), camera=(self), geolocation=()",  # the camera, for record mode
     "Cache-Control": "no-store",
 }
 

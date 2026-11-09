@@ -43,7 +43,9 @@ Open [prompter.plexologic.com](https://prompter.plexologic.com/) on your phone, 
 - **iPhone (Safari):** tap the **Share** button, then **Add to Home Screen**.
 - **Android (Chrome):** tap the **⋮** menu, then **Install app** (on some phones, **Add to Home screen**).
 
-It opens like an app, works without a connection after the first visit, and keeps your scripts on your phone. Tap the text to start or pause, and drag to scroll. Filming with the front camera is on the way.
+It opens like an app, works without a connection after the first visit, and keeps your scripts on your phone. Tap the text to start or pause, and drag to scroll.
+
+**Film yourself on your phone.** Tap the camera button and your front camera fills the screen behind the script, with the words just under the lens. The red button records: after the countdown, the text and the recording start together. Tap it again to stop, watch it back, and tap **Save video**: on an iPhone, choose **Save Video** in the share sheet to put it in Photos; on Android it downloads to your phone. Tapping the text still only pauses the words, so it can't end a take.
 
 ---
 
@@ -80,6 +82,7 @@ Pick up recent scripts, search the library, or drop text files into the **Script
 
 ![Plexo Prompter scrolling a script, with the word being read highlighted on the reading line](docs/images/prompter.png)
 
+- **Film yourself:** the camera behind the script, recorded on your phone or computer, saved as MP4 where your browser supports it
 - **Three ways to scroll:** auto-scroll, voice follow (moves as you speak), or a presentation clicker
 - **Word highlight:** a box that glides from word to word, or karaoke-style colour
 - **Natural rhythm:** short pauses after commas, longer after full stops
@@ -116,6 +119,7 @@ Files are listed by name, so start names with `01`, `02` to set the order.
 | + / - and [ / ] | Text size and column width |
 | K, T, M | Word highlight, colour scheme, mirror |
 | F, V, H, S | Full screen, voice follow, hide controls, settings |
+| C, R | Camera on or off; record or stop (with the camera on) |
 
 Presentation clickers work too. You can also scroll with the mouse wheel, or click a paragraph to jump to it.
 </details>
@@ -130,6 +134,7 @@ Voice follow listens through your browser's speech recognition and keeps the nex
 <summary><b>Privacy and security</b></summary>
 
 - Nothing is uploaded and nothing is tracked. The only internet use is your browser's speech service, while voice follow is on.
+- Videos you record stay on your device. A take is held in memory until you save it to your phone or computer; nothing else sees it. Voice follow rests while you record.
 - The online version is the same app, served as plain files by GitHub Pages. It sends nothing back, and your scripts stay in your browser on your device.
 - Saved scripts and settings stay in the browser on your computer.
 - The launcher only answers your own computer and refuses requests from websites. It serves the app's files and nothing else, under a strict Content Security Policy.

@@ -1,0 +1,40 @@
+/* Record mode (record.js): the camera behind the script, and the take screen. */
+
+/* The front camera fills the screen, mirrored like a selfie (the recording itself isn't). */
+#camera { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); background: #000; display: none; }
+body.camera #camera { display: block; }
+
+/* The script moves into a see-through band at the top, just under the lens; below it, you. */
+body.camera #viewport { bottom: auto; height: 40%; background: color-mix(in srgb, var(--bg) 62%, transparent); }
+body.camera .fade.bottom { height: 34%; }
+body.camera.mirror #viewport { transform: none; }
+
+/* In camera mode the play button records, and stops while recording. */
+#icon-record, #icon-stop { display: none; }
+body.camera #icon-play, body.camera #icon-pause { display: none; }
+body.camera:not(.recording) #icon-record, body.recording #icon-stop { display: block; }
+body.camera .controls .control.play { background: #E5484D; color: #fff; }
+body.camera .controls .control[data-command="camera"] { background: #3B4F2E; color: #CFF5B5; }
+
+/* While recording, the controls stay in reach so Stop is always one tap away. */
+body.camera.idle .controls { opacity: 1; pointer-events: auto; }
+body.camera.idle[data-view="prompt"] { cursor: auto; }
+
+#rec {
+  position: absolute; left: max(16px, var(--safe-left)); bottom: calc(96px + var(--safe-bottom)); z-index: 9; display: none; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 999px; background: rgba(0, 0, 0, .55); color: #fff; font: 700 13px var(--ui); letter-spacing: .08em; font-variant-numeric: tabular-nums;
+}
+#rec i { width: 10px; height: 10px; border-radius: 50%; background: #E5484D; animation: rec-blink 1s steps(2, start) infinite; }
+body.recording #rec { display: flex; }
+@keyframes rec-blink { to { visibility: hidden; } }
+
+/* ---------- the take screen ---------- */
+body[data-view="take"] #take { display: flex; }
+#take {
+  flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #000;
+  padding: calc(20px + var(--safe-top)) max(16px, var(--safe-right)) calc(20px + var(--safe-bottom)) max(16px, var(--safe-left));
+}
+#take-video { max-width: 100%; max-height: calc(100% - 130px); min-height: 0; border-radius: 14px; background: #111; }
+.take-actions { display: flex; gap: 12px; }
+.take-actions .btn { padding: 12px 22px; font-size: 16px; }
+.take-note { margin: 0; color: var(--muted); font-size: 13px; }

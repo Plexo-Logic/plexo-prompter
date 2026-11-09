@@ -1,7 +1,7 @@
 /**
  * Screens and browser history.
  *
- * The app has five screens: home, library, edit, prompt and setup. Each one apart from home is a
+ * The app has six screens: home, library, edit, prompt, take (a recorded take) and setup. Each one apart from home is a
  * browser history entry, so Back, Forward and a mouse's back button move between them. `depth`
  * counts how many entries sit above home, which lets the Home button jump straight back.
  *
@@ -14,7 +14,7 @@
 (function (Plexo) {
   "use strict";
 
-  const HASHES = { home: "", library: "#scripts", edit: "#edit", prompt: "#read", setup: "#setup" };
+  const HASHES = { home: "", library: "#scripts", edit: "#edit", prompt: "#read", take: "#take", setup: "#setup" };
   const hooks = {};
   let current = "home";
   let currentId = null;

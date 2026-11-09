@@ -192,11 +192,11 @@
     }
     if (finished) restart();
     if (!started && prefs.countdown > 0) return startCountdown(prefs.countdown);
-    started = true;
-    playing = true;
+    go();
   }
 
-  function startCountdown(seconds) {
+  /** Counts down on screen, then starts rolling (or calls `then`, which does). */
+  function startCountdown(seconds, then = go) {
     countdownLeft = seconds;
     el.countdown.textContent = String(seconds);
     el.countdown.classList.add("on");
@@ -207,9 +207,30 @@
         return;
       }
       clearCountdown();
-      started = true;
-      playing = true;
+      then();
     }, 1000);
+  }
+
+  function go() {
+    started = true;
+    playing = true;
+  }
+
+  /**
+   * For a recorded take: the countdown every time (if one is set), then `onRolling` at the moment the
+   * text starts to move. With a clicker, the text waits for the clicks as usual.
+   */
+  function roll(onRolling) {
+    if (!script) return;
+    stop();
+    if (finished) restart();
+    const begin = () => {
+      started = true;
+      playing = mode() !== "manual";
+      onRolling();
+    };
+    if (prefs.countdown > 0) startCountdown(prefs.countdown, begin);
+    else begin();
   }
 
   function clearCountdown() {
@@ -423,7 +444,7 @@
   Plexo.prompter = {
     open,
     current: () => script,
-    togglePlay, pause, restart, stop,
+    togglePlay, roll, pause, restart, stop,
     jumpParagraph, stepLine, scrollBy, jumpToBlock,
     tick, relayout,
     isMoving: () => playing || listening() || countdownLeft > 0,

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#131415">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
   <meta name="description" content="A free teleprompter. Read your script while looking straight down the lens.">
   <title>Plexo Prompter</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="css/setup.css">
   <link rel="stylesheet" href="css/prompter.css">
   <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/record.css">
 </head>
 <body data-view="home">
 
@@ -49,6 +50,9 @@
   <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
   <symbol id="i-fullscreen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/></symbol>
+  <symbol id="i-record" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2" fill="currentColor"/></symbol>
 </svg>
 
 <!-- ============================== Start screen ============================== -->
@@ -216,6 +220,7 @@ Leave a blank line between paragraphs. Start a line with # to add a section head
 
 <!-- ============================== Prompter ============================== -->
 <section class="view" id="prompt" aria-label="Prompter">
+  <video id="camera" muted playsinline autoplay aria-hidden="true"></video>
   <div id="viewport">
     <div id="scroller">
       <div id="pill"></div>
@@ -231,16 +236,18 @@ Leave a blank line between paragraphs. Start a line with # to add a section head
   <div id="prompt-title"></div>
   <div class="hud"><span class="clock" id="hud-clock">0:00 / 0:00</span><span class="state" id="hud-state">Ready</span></div>
   <div id="countdown"></div>
+  <div id="rec" aria-live="polite"><i></i>REC <span id="rec-time">0:00</span></div>
   <div id="heard" aria-live="polite"></div>
 
   <div class="controls">
     <button class="control" data-command="home" title="Home"><svg class="icon"><use href="#i-home"/></svg></button>
     <button class="control wide-only" data-command="edit-current" title="Edit this script"><svg class="icon"><use href="#i-edit"/></svg></button>
     <button class="control" data-command="toggle-settings" title="Display settings (S)"><svg class="icon"><use href="#i-sliders"/></svg></button>
+    <button class="control" data-command="camera" title="Film yourself: the camera behind the script (C)"><svg class="icon"><use href="#i-camera"/></svg></button>
     <span class="divider"></span>
     <button class="control" data-command="restart" title="Back to the start (Home key)"><svg class="icon"><use href="#i-restart"/></svg></button>
     <button class="control wide-only" data-command="paragraph-back" title="Previous paragraph (Left arrow)"><svg class="icon"><use href="#i-rewind"/></svg></button>
-    <button class="control play" data-command="play" title="Start or pause (Space)"><svg class="icon" id="icon-play"><use href="#i-play"/></svg><svg class="icon" id="icon-pause" hidden><use href="#i-pause"/></svg></button>
+    <button class="control play" data-command="play" title="Start or pause (Space)"><svg class="icon" id="icon-play"><use href="#i-play"/></svg><svg class="icon" id="icon-pause" hidden><use href="#i-pause"/></svg><svg class="icon" id="icon-record"><use href="#i-record"/></svg><svg class="icon" id="icon-stop"><use href="#i-stop"/></svg></button>
     <button class="control wide-only" data-command="paragraph-forward" title="Next paragraph (Right arrow)"><svg class="icon"><use href="#i-forward"/></svg></button>
     <span class="divider"></span>
     <button class="control" data-command="slower" title="Slower (Down arrow)"><svg class="icon"><use href="#i-minus"/></svg></button>
@@ -256,6 +263,16 @@ Leave a blank line between paragraphs. Start a line with # to add a section head
     <button class="control wide-only" data-command="toggle-voice" title="Voice follow (V)"><svg class="icon"><use href="#i-mic"/></svg></button>
     <button class="control wide-only" data-command="fullscreen" title="Full screen (F)"><svg class="icon"><use href="#i-fullscreen"/></svg></button>
   </div>
+</section>
+
+<!-- ============================== Your take ============================== -->
+<section class="view" id="take" aria-label="Your take">
+  <video id="take-video" playsinline></video>
+  <div class="take-actions">
+    <button class="btn" data-command="retake"><svg class="icon"><use href="#i-restart"/></svg>Retake</button>
+    <button class="btn primary" data-command="save-take"><svg class="icon"><use href="#i-open"/></svg>Save video</button>
+  </div>
+  <p class="take-note">Your take stays on this device. Nothing is&nbsp;uploaded.</p>
 </section>
 
 <!-- ============================== Settings drawer ============================== -->
@@ -381,6 +398,8 @@ Leave a blank line between paragraphs. Start a line with # to add a section head
 <script src="js/views.js"></script>
 <script src="js/highlight.js"></script>
 <script src="js/prompter.js"></script>
+<script src="js/recorder.js"></script>
+<script src="js/record.js"></script>
 <script src="js/home.js"></script>
 <script src="js/browse.js"></script>
 <script src="js/editor.js"></script>

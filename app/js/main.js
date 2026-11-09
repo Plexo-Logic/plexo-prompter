@@ -6,7 +6,7 @@
   "use strict";
 
   const { $, toast } = Plexo.util;
-  const { settings, library, views, prompter, voice, panel, browse, editor, setup } = Plexo;
+  const { settings, library, views, prompter, voice, panel, browse, editor, setup, record } = Plexo;
 
   /* ---------- opening scripts ---------- */
 
@@ -20,9 +20,17 @@
   }
 
   views.define("prompt", {
+    enter: () => record.enterPrompter(),
+    // Home, Back or Esc during a take: stop it and keep it (the take screen opens) rather than lose it.
+    canLeave: () => {
+      if (!record.isRecording()) return true;
+      record.toggleTake();
+      return false;
+    },
     leave: () => {
       keepAwake(false);
       prompter.stop();
+      record.leavePrompter();
       if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       const script = prompter.current();
       if (script && script.source === "saved") browse.select(script.id);
@@ -78,7 +86,11 @@
     restart: () => prompter.restart(),
     "paragraph-back": () => prompter.jumpParagraph(-1),
     "paragraph-forward": () => prompter.jumpParagraph(1),
-    play: () => prompter.togglePlay(),
+    // In camera mode the play button records; tapping the text, Space and clickers still only scroll.
+    play: () => (record.cameraOn() ? record.toggleTake() : prompter.togglePlay()),
+    camera: () => record.toggleCamera(),
+    "save-take": () => record.save(),
+    retake: () => record.retake(),
     slower: () => settings.nudge("wordsPerMinute", -1),
     faster: () => settings.nudge("wordsPerMinute", 1),
     smaller: () => settings.nudge("fontSize", -2),
@@ -135,6 +147,8 @@
     h: () => document.body.classList.toggle("hide-controls"),
     s: () => panel.toggle("display"),
     v: () => voice.toggleMode(),
+    c: () => record.toggleCamera(),
+    r: () => record.cameraOn() && record.toggleTake(),
   };
 
   function onKey(event) {

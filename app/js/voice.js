@@ -35,6 +35,7 @@
   let reason = !Recognition ? MESSAGES.unsupported : !served ? MESSAGES.fileUrl : embedded ? MESSAGES.embedded : "";
   let recognition = null;
   let listening = false;
+  let suspended = false; // during a recorded take
   let lastResultAt = 0;
   let language = navigator.language || "en-GB";
   let lastNonVoiceMode = prefs.mode === "voice" ? "auto" : prefs.mode;
@@ -70,7 +71,13 @@
 
   /** The mode the prompter should use: voice falls back to auto-scroll where it can't work. */
   function effectiveMode() {
-    return prefs.mode === "voice" && !available ? "auto" : prefs.mode;
+    return prefs.mode === "voice" && (!available || suspended) ? "auto" : prefs.mode;
+  }
+
+  /** Rests voice follow while a take is recorded (a phone lets only one thing use the microphone). */
+  function suspend(on) {
+    suspended = on;
+    if (on) stop();
   }
 
   /**
@@ -218,7 +225,7 @@
     isAvailable: () => available,
     reason: () => reason,
     isListening: () => listening,
-    effectiveMode,
+    effectiveMode, suspend,
     start, stop, tick, toggleMode, testMicrophone,
     onAvailabilityChange: availability.on,
   };

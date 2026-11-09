@@ -27,5 +27,8 @@ You can drag the text up or down with your finger at any time, to skip ahead or 
 # Make it yours
 Tap the settings button to change the colours, the size of the text, or where the reading line sits. You can also switch on voice follow there, so the text moves as you speak.
 
+# Film yourself
+Tap the camera button to see yourself behind the script, with the words just under the lens. The big red button records. The countdown runs, then the text and the recording start together. Tap the red button again to stop, and save your video to your phone.
+
 # Finish
 That is the tour. Tap the home button, then paste in your own script or open one from your files, and give it a go. [SMILE]
