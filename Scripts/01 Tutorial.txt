@@ -1,0 +1,41 @@
+# Welcome
+[SMILE] Welcome to Plexo Prompter. Read this out loud, as if you were recording, and it will show you what it can do.
+
+[PAUSE 1]
+
+# Word highlighting
+Watch the words light up as you go. The highlight moves at your reading pace, // so you always know exactly where you are. Press K to switch between a box, a karaoke fill, or no highlight at all.
+
+# Speed
+If this feels slow, click the plus button beside the speed, at the bottom of the screen. If it feels rushed, click minus. The number between them is your pace in words per minute, and the up and down arrow keys do the same job.
+
+# A short pause
+Some moments need a beat of silence.
+
+[PAUSE 2]
+
+That was a two second pause. The prompter waited, then carried on by itself.
+
+# A full stop
+The next marker stops the prompter completely, so you can reset before an important line. Press the space bar when you are ready to carry on.
+
+[PAUSE]
+
+# Voice follow
+Now for voice follow. The prompter will stop in a moment. When it does, press V to turn voice follow on, then press the space bar and keep reading out loud.
+
+[PAUSE]
+
+The words are following your voice now. Read at your own pace. If you stop talking, the prompter waits for you, // and when you start again, it picks up where you left off. Everything keeps up with you, *without anyone touching a key.*
+
+[STOP TALKING FOR A MOMENT]
+
+See how it waited? When you are ready, press V again to go back to automatic scrolling, then press the space bar.
+
+[PAUSE]
+
+# Make it yours
+Press T to try a different colour scheme. The two letter A buttons at the bottom, or the plus and minus keys on your keyboard, change the size of the text. The square bracket keys make the column narrower or wider.
+
+# Finish
+That is the tour. Press Escape to go back to your scripts, then open your own file and give it a go. [SMILE]

@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#131415">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="A free teleprompter. Read your script while looking straight down the lens.">
+  <title>Plexo Prompter</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Prompter">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/setup.css">
+  <link rel="stylesheet" href="css/prompter.css">
+  <link rel="stylesheet" href="css/settings.css">
+</head>
+<body data-view="home">
+
+<!-- Icons, used as <svg class="icon"><use href="#i-name"/></svg> -->
+<svg xmlns="http://www.w3.org/2000/svg" hidden>
+  <symbol id="i-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 8h9M10 12h9M10 16h6"/><path d="M4 9.5l3.2 2.5L4 14.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3-3 3 3"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.4M12 16.8h.01"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="i-restart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></symbol>
+  <symbol id="i-rewind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></symbol>
+  <symbol id="i-forward" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12"/></symbol>
+  <symbol id="i-plus-bold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></symbol>
+  <symbol id="i-text-small" viewBox="0 0 24 24" fill="currentColor"><text x="6" y="18" font-size="13" font-family="Arial" font-weight="700">A</text></symbol>
+  <symbol id="i-text-large" viewBox="0 0 24 24" fill="currentColor"><text x="3" y="21" font-size="21" font-family="Arial" font-weight="700">A</text></symbol>
+  <symbol id="i-highlight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M8 16l-1.5-1.5L14 7l3 3-7.5 7.5z"/><path d="M14 7l2-2 3 3-2 2"/></symbol>
+  <symbol id="i-contrast" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-fullscreen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<!-- ============================== Start screen ============================== -->
+<section class="view" id="home" aria-label="Start">
+  <header class="appbar">
+    <div class="brand"><span class="brand-mark"><svg class="icon"><use href="#i-mark"/></svg></span>Plexo Prompter</div>
+    <nav class="appbar-end">
+      <button class="btn ghost sm" data-command="show-library"><svg class="icon"><use href="#i-list"/></svg>All scripts</button>
+      <button class="btn ghost sm" data-command="show-display"><svg class="icon"><use href="#i-sliders"/></svg>Display</button>
+      <button class="btn ghost sm" data-command="show-help"><svg class="icon"><use href="#i-help"/></svg>Help</button>
+    </nav>
+  </header>
+
+  <main class="start">
+    <div class="start-inner">
+      <div>
+        <h1 id="greeting">Welcome</h1>
+        <p class="lead">Pick up where you left off, or start something&nbsp;new.</p>
+
+        <h2 class="group-label">Start</h2>
+        <div class="start-actions">
+          <button class="start-action" data-command="new-script">
+            <span class="start-action-icon"><svg class="icon"><use href="#i-plus"/></svg></span>
+            <span class="start-action-text">New script<small>Write one, or paste it in</small></span><kbd>N</kbd>
+          </button>
+          <button class="start-action" data-command="open-file">
+            <span class="start-action-icon"><svg class="icon"><use href="#i-open"/></svg></span>
+            <span class="start-action-text">Open a file<small>Text files from this device</small></span><kbd>O</kbd>
+          </button>
+          <button class="start-action" id="start-folder" data-command="use-folder">
+            <span class="start-action-icon"><svg class="icon"><use href="#i-folder"/></svg></span>
+            <span class="start-action-text"><span id="start-folder-title">Scripts folder</span><small id="start-folder-detail"></small></span>
+          </button>
+        </div>
+
+        <h2 class="group-label">Recent <button class="link" id="start-all" data-command="show-library"></button></h2>
+        <div class="recent" id="recent-list"></div>
+      </div>
+
+      <aside class="start-side">
+        <div class="demo" aria-hidden="true">
+          <div class="demo-hud">0:12 / 0:54 <span>Rolling</span></div>
+          <div class="demo-band"></div><div class="demo-arrow left"></div><div class="demo-arrow right"></div>
+          <div class="demo-line dim">Read your script</div>
+          <div class="demo-line current">while looking straight</div>
+          <div class="demo-line dim">down the lens.</div>
+        </div>
+        <h2>New to Plexo Prompter?</h2>
+        <p>The two minute tutorial shows you each feature while you read it out loud, voice follow&nbsp;included.</p>
+        <button class="btn primary" data-command="tutorial"><svg class="icon"><use href="#i-play"/></svg>Start the tutorial</button>
+        <div class="start-links">
+          <button class="link" data-command="setup">Set up your prompter</button>
+          <button class="link" data-command="show-help">Keyboard shortcuts</button>
+          <button class="link" data-command="show-help">How to write a script</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="start-footer">
+    <span>Your scripts stay on this device. Nothing is&nbsp;uploaded.</span>
+    <span>Free and open source, from&nbsp;PlexoLogic</span>
+  </footer>
+</section>
+
+<!-- ============================== Library ============================== -->
+<section class="view" id="library" aria-label="All scripts">
+  <header class="appbar">
+    <button class="btn ghost sm" data-command="home"><svg class="icon"><use href="#i-back"/></svg>Home</button>
+    <div class="tabs-inline" id="library-tabs">
+      <button data-tab="saved">All scripts<span class="count" id="library-count-saved"></span></button>
+      <button data-tab="folder" id="library-tab-folder"><span id="library-folder-label">Scripts folder</span><span class="count" id="library-count-folder"></span></button>
+    </div>
+    <div class="appbar-end">
+      <label class="search"><svg class="icon"><use href="#i-search"/></svg><input id="library-search" type="search" placeholder="Search scripts" spellcheck="false" aria-label="Search scripts"></label>
+      <button class="btn sm hide-narrow" data-command="open-file">Open a file</button>
+      <button class="btn sm primary" data-command="new-script"><svg class="icon"><use href="#i-plus"/></svg>New script</button>
+    </div>
+  </header>
+  <div class="library">
+    <div class="library-list">
+      <div class="library-list-head"><h2 id="library-title">All scripts</h2><span id="library-total"></span></div>
+      <div class="library-rows" id="library-list"></div>
+      <div class="library-footer" id="library-footer"></div>
+    </div>
+    <div class="preview" id="library-preview"></div>
+  </div>
+</section>
+
+<!-- ============================== Setup ============================== -->
+<section class="view" id="setup" aria-label="Setup">
+  <header class="appbar">
+    <div class="brand"><span class="brand-mark"><svg class="icon"><use href="#i-mark"/></svg></span>Plexo Prompter setup</div>
+    <div class="appbar-end"><button class="btn ghost sm" id="setup-skip">Skip setup</button></div>
+  </header>
+  <div class="setup">
+    <div class="setup-main">
+      <div class="setup-steps" id="setup-steps"></div>
+      <div class="setup-body" id="setup-body"></div>
+      <div class="setup-nav" id="setup-nav">
+        <span class="setup-nav-note" id="setup-nav-note"></span>
+        <button class="btn" id="setup-back">Back</button>
+        <button class="btn primary" id="setup-next">Next</button>
+      </div>
+    </div>
+    <div class="setup-preview">
+      <div class="setup-preview-label"><span>Live preview</span><span id="preview-mode"></span></div>
+      <div class="preview-screen" id="preview-screen">
+        <div class="preview-scroll" id="preview-scroll"><div class="preview-pill" id="preview-pill"></div><div class="preview-text" id="preview-text"></div></div>
+        <div class="preview-fade" id="preview-fade"></div>
+        <div class="preview-band" id="preview-band"></div>
+        <div class="preview-arrow left" id="preview-arrow-left"></div>
+        <div class="preview-arrow right" id="preview-arrow-right"></div>
+        <div class="preview-hud" id="preview-hud"></div>
+      </div>
+      <p class="setup-caption" id="preview-caption"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Editor ============================== -->
+<section class="view" id="edit" aria-label="Edit script">
+  <header class="editor-bar">
+    <button class="btn ghost" id="editor-back"><svg class="icon"><use href="#i-back"/></svg>Back</button>
+    <input class="editor-name" id="editor-name" placeholder="Untitled script" spellcheck="false" maxlength="200" aria-label="Script name">
+    <span class="editor-status" id="editor-status"></span>
+    <button class="btn" id="editor-save">Save</button>
+    <button class="btn primary" id="editor-start"><svg class="icon"><use href="#i-play"/></svg>Start prompter</button>
+  </header>
+  <div class="editor">
+    <div class="editor-main">
+      <div class="editor-tools"><span>Insert</span>
+        <button class="btn sm" data-marker="heading">Heading</button>
+        <button class="btn sm" data-marker="pause">Stop and wait</button>
+        <button class="btn sm" data-marker="hold">2 second pause</button>
+        <button class="btn sm" data-marker="breath">Breath mark</button>
+        <button class="btn sm" data-marker="cue">Reminder</button>
+        <button class="btn sm" data-marker="emphasis">Emphasis</button>
+      </div>
+      <textarea id="editor-text" spellcheck="true" aria-label="Script text" placeholder="Type or paste your script here.
+
+Leave a blank line between paragraphs. Start a line with # to add a section heading."></textarea>
+    </div>
+    <aside class="editor-side">
+      <h3>Length</h3>
+      <div class="editor-total" id="editor-total">0:00</div>
+      <p class="editor-summary" id="editor-summary">0 words</p>
+      <div class="card">
+        <label class="card-label" for="editor-pace">Reading pace <b id="editor-pace-label"></b></label>
+        <input type="range" id="editor-pace" min="80" max="240" step="5">
+        <p class="hint">Around 150 suits most people. The prompter scrolls at this pace.</p>
+      </div>
+      <div class="card">
+        <div class="target">Need it to finish in <span class="nowrap"><input class="field" id="editor-target" inputmode="numeric" placeholder="60" aria-label="Target length in seconds"> seconds?</span></div>
+        <div class="target-result" id="editor-target-result"></div>
+      </div>
+      <h3 class="timings-head">Timings <button class="btn sm ghost" id="editor-copy">Copy</button></h3>
+      <ul class="timings" id="editor-timings"></ul>
+      <p class="hint">Worked out from the word count, your pace and the pauses in the script. Stops that wait for you are not&nbsp;counted.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================== Prompter ============================== -->
+<section class="view" id="prompt" aria-label="Prompter">
+  <div id="viewport">
+    <div id="scroller">
+      <div id="pill"></div>
+      <div id="pad-top"></div>
+      <div id="script-text"></div>
+      <div id="pad-bottom"></div>
+    </div>
+    <div class="fade top"></div>
+    <div class="fade bottom"></div>
+    <div id="reading-line"><div class="reading-line-inner"><div class="band"></div><div class="arrow left"></div><div class="arrow right"></div></div></div>
+  </div>
+  <div id="progress"></div>
+  <div id="prompt-title"></div>
+  <div class="hud"><span class="clock" id="hud-clock">0:00 / 0:00</span><span class="state" id="hud-state">Ready</span></div>
+  <div id="countdown"></div>
+  <div id="heard" aria-live="polite"></div>
+
+  <div class="controls">
+    <button class="control" data-command="home" title="Home"><svg class="icon"><use href="#i-home"/></svg></button>
+    <button class="control wide-only" data-command="edit-current" title="Edit this script"><svg class="icon"><use href="#i-edit"/></svg></button>
+    <button class="control" data-command="toggle-settings" title="Display settings (S)"><svg class="icon"><use href="#i-sliders"/></svg></button>
+    <span class="divider"></span>
+    <button class="control" data-command="restart" title="Back to the start (Home key)"><svg class="icon"><use href="#i-restart"/></svg></button>
+    <button class="control wide-only" data-command="paragraph-back" title="Previous paragraph (Left arrow)"><svg class="icon"><use href="#i-rewind"/></svg></button>
+    <button class="control play" data-command="play" title="Start or pause (Space)"><svg class="icon" id="icon-play"><use href="#i-play"/></svg><svg class="icon" id="icon-pause" hidden><use href="#i-pause"/></svg></button>
+    <button class="control wide-only" data-command="paragraph-forward" title="Next paragraph (Right arrow)"><svg class="icon"><use href="#i-forward"/></svg></button>
+    <span class="divider"></span>
+    <button class="control" data-command="slower" title="Slower (Down arrow)"><svg class="icon"><use href="#i-minus"/></svg></button>
+    <div class="readout"><b id="speed-value">155</b><span>words/min</span></div>
+    <button class="control" data-command="faster" title="Faster (Up arrow)"><svg class="icon"><use href="#i-plus-bold"/></svg></button>
+    <span class="divider wide-only"></span>
+    <button class="control wide-only" data-command="smaller" title="Smaller text (-)"><svg class="icon"><use href="#i-text-small"/></svg></button>
+    <div class="readout wide-only"><b id="size-value">56</b><span>text size</span></div>
+    <button class="control wide-only" data-command="bigger" title="Bigger text (+)"><svg class="icon"><use href="#i-text-large"/></svg></button>
+    <span class="divider wide-only"></span>
+    <button class="control wide-only" data-command="next-highlight" title="Word highlight: boxed, karaoke or off (K)"><svg class="icon"><use href="#i-highlight"/></svg></button>
+    <button class="control wide-only" data-command="next-theme" title="Next colour scheme (T)"><svg class="icon"><use href="#i-contrast"/></svg></button>
+    <button class="control wide-only" data-command="toggle-voice" title="Voice follow (V)"><svg class="icon"><use href="#i-mic"/></svg></button>
+    <button class="control wide-only" data-command="fullscreen" title="Full screen (F)"><svg class="icon"><use href="#i-fullscreen"/></svg></button>
+  </div>
+</section>
+
+<!-- ============================== Settings drawer ============================== -->
+<aside class="drawer" id="settings" aria-label="Settings" inert>
+  <div class="drawer-head">
+    <div class="drawer-title-row"><h2>Settings</h2><button class="control" id="settings-close" title="Close (Esc)"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <div class="drawer-tabs">
+      <button data-panel-tab="display" class="on">Display</button>
+      <button data-panel-tab="help">Help</button>
+    </div>
+  </div>
+  <div class="drawer-body">
+    <div data-panel="display">
+      <button class="btn block" id="settings-rerun">Run setup again</button>
+      <div class="setting">
+        <label for="set-mode">How the text moves</label>
+        <select id="set-mode" data-setting="mode">
+          <option value="auto">Auto-scroll</option>
+          <option value="voice">Voice follow</option>
+          <option value="manual">Clicker or keyboard, one line at a time</option>
+        </select>
+        <p class="note" id="set-mode-note"></p>
+      </div>
+      <div class="setting">
+        <span class="setting-label">Colours</span>
+        <div class="swatches" id="set-themes"></div>
+        <div class="custom-colours" id="set-custom" hidden>
+          <label>Text<input type="color" id="set-custom-text"></label>
+          <label>Background<input type="color" id="set-custom-background"></label>
+          <label>Markers<input type="color" id="set-custom-marker"></label>
+        </div>
+      </div>
+      <div class="setting"><label for="set-font">Font</label><select id="set-font" data-setting="font"></select></div>
+      <div class="setting"><label>Text size <b data-readout="fontSize"></b></label><input type="range" data-setting="fontSize" aria-label="Text size"></div>
+      <div class="setting wide-only">
+        <label>Column width <b data-readout="columnWidth"></b></label><input type="range" data-setting="columnWidth" aria-label="Column width">
+        <p class="note">Narrow keeps your eyes still and close to the camera.</p>
+      </div>
+      <div class="setting"><label>Line spacing <b data-readout="lineHeight"></b></label><input type="range" data-setting="lineHeight" aria-label="Line spacing"></div>
+      <div class="setting">
+        <label>Reading line position <b data-readout="readingLine"></b></label><input type="range" data-setting="readingLine" aria-label="Reading line position">
+        <p class="note">Keep it near the top of the screen, just under your camera.</p>
+      </div>
+      <div class="setting"><label>Speed <b data-readout="wordsPerMinute"></b></label><input type="range" data-setting="wordsPerMinute" aria-label="Speed"></div>
+      <div class="setting">
+        <label for="set-highlight">Highlight words as you read</label>
+        <select id="set-highlight" data-setting="highlight">
+          <option value="word">Current word, boxed</option>
+          <option value="karaoke">Karaoke, words fill with colour</option>
+          <option value="off">Off</option>
+        </select>
+        <p class="note">Follows the scrolling pace, or your voice when voice follow is on.</p>
+      </div>
+      <div class="setting">
+        <label for="set-countdown">Countdown before starting</label>
+        <select id="set-countdown" data-setting="countdown">
+          <option value="0">None</option>
+          <option value="3">3 seconds</option>
+          <option value="5">5 seconds</option>
+        </select>
+      </div>
+      <div id="set-switches"></div>
+    </div>
+
+    <div class="help" data-panel="help" hidden>
+      <div class="touch-only">
+        <h3>On a phone or tablet</h3>
+        <table>
+          <tr><td>Tap the text</td><td>Start, pause, or carry on after a stop</td></tr>
+          <tr><td>Drag the text</td><td>Scroll by hand, to skip ahead or go back</td></tr>
+          <tr><td>Plus and minus</td><td>Faster or slower</td></tr>
+        </table>
+        <p class="note">Bluetooth page turners and presentation clickers work too.</p>
+      </div>
+      <h3>Getting started</h3>
+      <p>Open a text file or paste a script from the start screen. The prompter saves it, works out how long it will take, and shows when each section starts. Press Start prompter, then&nbsp;Space.</p>
+      <h3>Writing a script</h3>
+      <table>
+        <tr><td>Blank line</td><td>New paragraph</td></tr>
+        <tr><td><code># Hook</code></td><td>Section heading, shown small with its start time, not read out</td></tr>
+        <tr><td><code>[PAUSE]</code> on its own line</td><td>Stops until you press Space</td></tr>
+        <tr><td><code>[PAUSE 2]</code></td><td>Waits two seconds, then carries on</td></tr>
+        <tr><td><code>//</code></td><td>A breath mark, no stop</td></tr>
+        <tr><td><code>[SMILE]</code></td><td>Any other words in square brackets are a reminder, not read out</td></tr>
+        <tr><td><code>*word*</code></td><td>Emphasis</td></tr>
+      </table>
+      <h3>Keys in the prompter</h3>
+      <table>
+        <tr><td><kbd>Space</kbd> or <kbd>Page Down</kbd></td><td>Start, pause, or carry on after a stop</td></tr>
+        <tr><td><kbd>&uarr;</kbd> <kbd>&darr;</kbd></td><td>Faster or slower (in clicker mode, previous or next line)</td></tr>
+        <tr><td><kbd>&larr;</kbd> or <kbd>Page Up</kbd>, <kbd>&rarr;</kbd></td><td>Previous or next paragraph</td></tr>
+        <tr><td><kbd>Shift</kbd> + <kbd>&larr;</kbd> <kbd>&rarr;</kbd></td><td>Previous or next section</td></tr>
+        <tr><td><kbd>Home</kbd></td><td>Back to the start</td></tr>
+        <tr><td><kbd>+</kbd> <kbd>-</kbd> and <kbd>[</kbd> <kbd>]</kbd></td><td>Text size and column width</td></tr>
+        <tr><td><kbd>K</kbd></td><td>Word highlight: boxed, karaoke or off</td></tr>
+        <tr><td><kbd>T</kbd> <kbd>M</kbd> <kbd>F</kbd></td><td>Colours, mirror, full screen</td></tr>
+        <tr><td><kbd>V</kbd> <kbd>H</kbd> <kbd>S</kbd></td><td>Voice follow, hide controls, settings</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Pause, then back to the start screen</td></tr>
+      </table>
+      <p class="note">A presentation clicker works too: forward starts and pauses, back goes up a paragraph. You can scroll with the mouse wheel, or click any paragraph to jump to&nbsp;it.</p>
+      <h3>Looking natural on camera</h3>
+      <p>Put the prompter at the top of the screen, right under the webcam, and keep the column narrow so your eyes barely&nbsp;move.</p>
+      <p>Sit back a little further than usual. Bigger text from further away keeps your gaze&nbsp;steadier.</p>
+      <p>Pick a natural pace, around 150 words a minute, and let the pauses do the work. Normal sentence case reads faster than&nbsp;capitals.</p>
+    </div>
+  </div>
+</aside>
+
+<dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="drop-zone">Drop text files to add them<small>They are saved to your scripts</small></div>
+<input type="file" id="file-input" accept=".txt,.md,.text,text/plain,text/markdown" multiple hidden>
+
+<script src="js/core.js"></script>
+<script src="js/dialog.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/script.js"></script>
+<script src="js/track.js"></script>
+<script src="js/follow.js"></script>
+<script src="js/samples.js"></script>
+<script src="js/library.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/views.js"></script>
+<script src="js/highlight.js"></script>
+<script src="js/prompter.js"></script>
+<script src="js/home.js"></script>
+<script src="js/browse.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/preview.js"></script>
+<script src="js/setup.js"></script>
+<script src="js/panel.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

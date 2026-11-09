@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+.DS_Store
+Thumbs.db
+
+# Your own scripts stay out of the repository; only the sample scripts are tracked.
+Scripts/*
+!Scripts/00 Start here.txt
+!Scripts/01 Tutorial.txt
+!Scripts/02 Phone tutorial.txt

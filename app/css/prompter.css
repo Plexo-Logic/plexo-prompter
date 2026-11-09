@@ -1,0 +1,145 @@
+/* The prompter itself: the scrolling script, reading line, timer and control bar.
+   Colours, size and spacing come from the CSS variables that settings.js sets. */
+
+#viewport { position: absolute; inset: 0; overflow: hidden; background: var(--bg); touch-action: none; user-select: none; -webkit-user-select: none; }
+body.mirror #viewport { transform: scaleX(-1); }
+#scroller { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+
+#script-text {
+  position: relative; z-index: 1; max-width: var(--col); margin: 0 auto; padding: 0 24px;
+  color: var(--fg); font-family: var(--font); font-size: var(--fs); line-height: var(--lh); font-weight: var(--weight);
+  overflow-wrap: break-word;
+}
+#script-text p { margin: 0 0 calc(var(--fs) * .85); cursor: pointer; }
+
+/* Section headings: small, in the marker colour, with their start time. Not read out. */
+#script-text .heading {
+  display: flex; justify-content: space-between; gap: 1em; margin: calc(var(--fs) * .5) 0 calc(var(--fs) * .2); cursor: pointer;
+  font: 700 max(14px, calc(var(--fs) * .3))/1.3 var(--ui); letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
+}
+.heading-time { letter-spacing: .04em; opacity: .75; font-variant-numeric: tabular-nums; }
+body.no-timer .heading-time { display: none; }
+
+#script-text .cue {
+  display: inline-block; padding: .15em .5em; border: 2px solid var(--accent); border-radius: .5em; vertical-align: middle;
+  font: 700 .42em/1.2 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
+}
+#script-text .breath { color: var(--accent); font-weight: 400; opacity: .9; }
+#script-text .emphasis { text-decoration: underline; text-decoration-thickness: .07em; text-underline-offset: .14em; }
+body.caps .word { text-transform: uppercase; }
+
+#script-text .pause-marker {
+  display: flex; align-items: center; gap: .6em; margin: 0 0 calc(var(--fs) * .85);
+  font: 700 max(13px, calc(var(--fs) * .26)) var(--ui); letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
+}
+#script-text .pause-marker::before,
+#script-text .pause-marker::after { content: ""; flex: 1; height: 2px; background: var(--accent); opacity: .55; }
+#script-text .script-end {
+  padding-top: calc(var(--fs) * .4); text-align: center;
+  font: 700 max(14px, calc(var(--fs) * .3)) var(--ui); letter-spacing: .2em; text-transform: uppercase; color: var(--accent);
+}
+
+/* ---------- word highlight, shared by the prompter and the setup preview ---------- */
+#pill {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 0; border-radius: .18em;
+  background: var(--accent); opacity: 0; pointer-events: none; will-change: transform, width;
+  transition: transform .17s cubic-bezier(.25, .8, .35, 1), width .17s cubic-bezier(.25, .8, .35, 1), height .17s, opacity .25s;
+}
+body.hl-word #pill.on,
+body.hl-word .preview-pill.on { opacity: 1; }
+body.hl-word .word { transition: color .14s; }
+body.hl-word .word.hl { color: var(--bg); }
+body.hl-karaoke .word.done { color: var(--accent); }
+body.hl-karaoke .word.hl {
+  background: linear-gradient(90deg, var(--accent) var(--p, 0%), var(--fg) var(--p, 0%));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ---------- reading line and fades ---------- */
+#reading-line { position: absolute; left: 0; right: 0; top: var(--read); height: 0; pointer-events: none; }
+.reading-line-inner { position: relative; height: 0; max-width: var(--col); margin: 0 auto; font-family: var(--font); font-size: var(--fs); }
+#reading-line .band {
+  position: absolute; left: 0; right: 0; top: calc(var(--fs) * var(--lh) * -.55); height: calc(var(--fs) * var(--lh) * 1.1);
+  border-radius: 10px; background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+body.no-band #reading-line .band { display: none; }
+#reading-line .arrow { position: absolute; top: -16px; border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+#reading-line .arrow.left { left: -34px; border-left: 26px solid var(--accent); }
+#reading-line .arrow.right { right: -34px; border-right: 26px solid var(--accent); }
+
+.fade { position: absolute; left: 0; right: 0; pointer-events: none; }
+.fade.top {
+  top: 0; height: calc(var(--read) - var(--fs) * var(--lh) * .6);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 90%, transparent), color-mix(in srgb, var(--bg) 45%, transparent));
+}
+.fade.bottom { bottom: 0; height: 26%; background: linear-gradient(to top, color-mix(in srgb, var(--bg) 75%, transparent), transparent); }
+body.no-dim .fade { display: none; }
+
+/* ---------- progress, title, timer ---------- */
+#progress { position: absolute; left: 0; top: 0; z-index: 5; width: 0; height: 4px; background: var(--accent); opacity: .9; }
+#prompt-title {
+  position: absolute; top: calc(14px + var(--safe-top)); left: max(18px, var(--safe-left)); z-index: 5; max-width: 45vw; pointer-events: none;
+  font: 600 14px var(--ui); color: var(--fg); opacity: .55; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .35s;
+}
+.hud { position: absolute; top: calc(12px + var(--safe-top)); right: max(16px, var(--safe-right)); z-index: 5; display: flex; gap: 12px; align-items: center; pointer-events: none; font: 600 15px var(--ui); color: var(--fg); opacity: .8; }
+.hud .clock { font-size: 18px; font-variant-numeric: tabular-nums; }
+body.no-timer .hud .clock { display: none; }
+.hud .state { padding: 4px 10px; border-radius: 20px; background: color-mix(in srgb, var(--fg) 12%, transparent); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+.hud .state.live { background: var(--live); color: #fff; }
+.hud .state.wait { background: var(--accent); color: var(--bg); }
+
+#countdown { position: absolute; inset: 0; z-index: 8; display: none; align-items: center; justify-content: center; pointer-events: none; font: 700 30vh var(--ui); color: var(--accent); }
+#countdown.on { display: flex; }
+
+/* What voice follow heard, so the reader knows it is listening. */
+#heard {
+  position: absolute; left: 50%; bottom: 92px; z-index: 6; transform: translateX(-50%); max-width: min(720px, 86vw);
+  padding: 7px 14px; border-radius: 10px; background: var(--overlay); color: #E9EEF0; font: 500 14px var(--ui);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: left;
+  opacity: 0; transition: opacity .3s; pointer-events: none;
+}
+#heard.on { opacity: 1; }
+#heard b { color: var(--amber); font-weight: 600; }
+body.idle #heard.on { opacity: .55; }
+
+/* ---------- control bar ---------- */
+.controls {
+  position: absolute; left: 50%; bottom: calc(18px + var(--safe-bottom)); z-index: 10; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px; padding: 8px 10px; white-space: nowrap;
+  border: 1px solid var(--line); border-radius: 16px; background: var(--overlay); color: var(--text);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35); transition: opacity .35s;
+}
+.controls .control.play { width: 52px; height: 52px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); }
+.controls .control.play:hover { filter: brightness(1.06); }
+.controls .control.on { background: #3B4F2E; color: #CFF5B5; }
+.controls .divider { width: 1px; height: 28px; margin: 0 4px; background: var(--line); }
+.readout { min-width: 72px; text-align: center; font-size: 14px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.readout b { display: block; font-size: 17px; }
+.readout span { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+body.idle .controls,
+body.idle #prompt-title,
+body.hide-controls .controls { opacity: 0; pointer-events: none; }
+body.idle[data-view="prompt"] { cursor: none; }
+
+/* A window too narrow for the full control bar keeps the essentials; the rest are in Settings. */
+@media (max-width: 900px) {
+  .controls .wide-only { display: none; }
+}
+
+/* ---------- phones: full-width text, arrows inside the edges, a compact control bar ---------- */
+.compact #script-text { padding: 0 max(30px, var(--safe-right)) 0 max(30px, var(--safe-left)); }
+.compact #reading-line .band { left: 4px; right: 4px; border-radius: 8px; }
+.compact #reading-line .arrow { top: -10px; border-top-width: 10px; border-bottom-width: 10px; }
+.compact #reading-line .arrow.left { left: max(6px, var(--safe-left)); border-left-width: 16px; }
+.compact #reading-line .arrow.right { right: max(6px, var(--safe-right)); border-right-width: 16px; }
+.compact #prompt-title { display: none; }
+.compact .hud { gap: 8px; padding: 4px 4px 4px 10px; border-radius: 16px; font-size: 13px; background: color-mix(in srgb, var(--bg) 82%, transparent); opacity: .9; }
+.compact .hud .clock { font-size: 15px; }
+.compact .hud .state { padding: 3px 8px; font-size: 10.5px; }
+.compact .controls { gap: 2px; padding: 6px 8px; border-radius: 18px; }
+.compact .controls .control { width: 42px; height: 42px; }
+.compact .controls .control.play { width: 50px; height: 50px; }
+.compact .controls .divider { margin: 0 2px; }
+.compact .readout { min-width: 46px; }
+.compact .readout span { font-size: 9px; letter-spacing: .06em; }

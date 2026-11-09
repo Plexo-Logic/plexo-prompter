@@ -1,0 +1,29 @@
+# Welcome
+This is your prompter. Press the space bar to start, and press it again to pause.
+
+The plus and minus buttons beside the speed, at the bottom of the screen, make it faster or slower. The number between them is your pace in words per minute, and the up and down arrow keys do the same.
+
+[PAUSE]
+
+# Your own scripts
+Save any script as a plain text file in the Scripts folder, and it appears in the list straight away. Edit a file, save it, and the prompter updates by itself.
+
+Leave a blank line between paragraphs. Start a line with a hash sign to add a section heading, like the ones you can see here. Headings are not read out.
+
+# Pauses
+Type the word PAUSE in square brackets on its own line, and the prompter stops there until you press the space bar. That is what just happened above.
+
+Add a number after the word, such as PAUSE 2, and it waits for two seconds, then carries on by itself.
+
+[PAUSE 2]
+
+Two forward slashes add a breath mark // like that, without stopping. Any other word in square brackets is a reminder for you, not something to read out. [SMILE]
+
+Put stars either side of a word to give it *emphasis*.
+
+# Looking natural on camera
+Put the prompter at the top of your screen, just under the webcam, and keep the column narrow, so your eyes hardly move.
+
+Sit back a little from the screen. Larger text, read from further away, keeps your gaze steady.
+
+Find your natural pace, then let the pauses do the work. Around one hundred and fifty words a minute suits most people.

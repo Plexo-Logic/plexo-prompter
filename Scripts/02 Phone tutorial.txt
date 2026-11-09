@@ -1,0 +1,31 @@
+# Welcome
+[SMILE] Welcome to Plexo Prompter. Read this out loud, as if you were recording, and it will show you what it can do.
+
+[PAUSE 1]
+
+# Word highlighting
+Watch the words light up as you go. The highlight moves at your reading pace, // so you always know exactly where you are.
+
+# Speed
+If this feels slow, tap the plus button at the bottom of the screen. If it feels rushed, tap minus. The number between them is your pace in words per minute.
+
+# A short pause
+Some moments need a beat of silence.
+
+[PAUSE 2]
+
+That was a two second pause. The prompter waited, then carried on by itself.
+
+# A full stop
+The next marker stops the prompter completely, so you can reset before an important line. Tap the screen when you are ready to carry on.
+
+[PAUSE]
+
+# Scrolling by hand
+You can drag the text up or down with your finger at any time, to skip ahead or go back over a line. Tap the screen once to pause, and tap again to carry on.
+
+# Make it yours
+Tap the settings button to change the colours, the size of the text, or where the reading line sits. You can also switch on voice follow there, so the text moves as you speak.
+
+# Finish
+That is the tour. Tap the home button, then paste in your own script or open one from your files, and give it a go. [SMILE]

@@ -1,0 +1,182 @@
+/* Design tokens, reset and the controls shared by every screen. */
+
+:root {
+  /* Prompter text. Set from the chosen colour scheme by settings.js. */
+  --bg: #000000;
+  --fg: #FFFFFF;
+  --accent: #F5C542;
+  --fs: 56px;
+  --lh: 1.45;
+  --col: 30ch;
+  --read: 22%;
+  --weight: 700;
+  --font: Arial, Helvetica, sans-serif;
+
+  /* App interface. */
+  --app: #131415;
+  --side: #0E0F10;
+  --panel: #18191B;
+  --panel-2: #1F2123;
+  --panel-3: #27292C;
+  --line: #2A2C2F;
+  --line-strong: #3A3D41;
+  --line-soft: #4A4D52;
+  --line-focus: #3A4A50;
+  --hover: #1B1D1F;
+  --selected: #23262A;
+  --text: #ECEDEE;
+  --muted: #8D9297;
+  --amber: #F2B84B;
+  --amber-ink: #1D1607;
+  --amber-wash: #1D1A13;
+  --amber-line: #5B4A22;
+  --live: #C0392B;
+  --overlay: rgba(20, 26, 29, .94);
+  /* Illustrations (the start screen demo, setup's examples) always show the classic scheme,
+     whichever colours the user picks, so they use this instead of --accent. */
+  --demo-marker: #F5C542;
+  --ok: #4CC38A;
+  --danger: #E5735F;
+  --ui: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+
+  /* Space for the notch, Dynamic Island and home bar on phones. Zero everywhere else. */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --bar: calc(52px + var(--safe-top));
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: var(--app); color: var(--text); font-family: var(--ui); }
+body { overflow: hidden; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.nowrap { white-space: nowrap; }
+
+/* One screen at a time, chosen by body[data-view]. */
+.view { position: fixed; inset: 0; display: none; }
+body[data-view="home"] #home { display: flex; flex-direction: column; }
+body[data-view="library"] #library,
+body[data-view="setup"] #setup { display: grid; grid-template-rows: var(--bar) minmax(0, 1fr); }
+body[data-view="edit"] #edit { display: grid; grid-template-rows: calc(64px + var(--safe-top)) minmax(0, 1fr); }
+body[data-view="prompt"] #prompt { display: block; }
+body[data-view="prompt"] { background: var(--bg); }
+
+.icon { width: 20px; height: 20px; flex: 0 0 auto; }
+
+/* ---------- buttons and fields ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid var(--line); background: var(--panel-2); border-radius: 7px;
+  padding: 7px 13px; cursor: pointer; font-size: 13.5px; white-space: nowrap;
+}
+.btn:hover { border-color: var(--line-strong); background: var(--panel-3); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn .icon { width: 15px; height: 15px; }
+.btn.primary { background: var(--amber); color: var(--amber-ink); border-color: var(--amber); font-weight: 600; }
+.btn.primary:hover { filter: brightness(1.05); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--text); background: var(--panel-2); }
+.btn.sm { padding: 5px 10px; font-size: 12.5px; border-radius: 6px; }
+.btn.block { width: 100%; }
+
+.link { background: none; border: 0; color: var(--amber); cursor: pointer; padding: 0; font-size: 13px; }
+.link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Square icon button, used in the prompter's control bar and the drawer. */
+.control {
+  width: 40px; height: 40px; border-radius: 10px; border: 0; background: transparent;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.control:hover { background: var(--panel-3); }
+.control .icon { width: 21px; height: 21px; }
+
+.field { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; outline: none; }
+.field:focus { border-color: var(--amber); }
+input[type=range] { width: 100%; accent-color: var(--amber); }
+/* Drawn by us, so every browser (Safari on iPhone included) shows the same dark menu. */
+select {
+  width: 100%; padding: 8px 32px 8px 10px; border: 1px solid var(--line); border-radius: 8px; color: var(--text);
+  appearance: none; -webkit-appearance: none;
+  background: var(--panel-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238D9297' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 11px center / 11px;
+}
+option { background: var(--panel-2); color: var(--text); }
+
+kbd {
+  font: 600 11.5px var(--ui); color: var(--muted); background: var(--panel-2);
+  border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 7px;
+}
+
+.live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+/* ---------- app bar (start, library, setup) ---------- */
+.appbar {
+  display: flex; align-items: center; gap: 12px; min-width: 0;
+  height: var(--bar); flex: 0 0 var(--bar);
+  padding: var(--safe-top) max(14px, var(--safe-right)) 0 max(18px, var(--safe-left));
+  border-bottom: 1px solid var(--line); background: var(--side);
+}
+.appbar-end { margin-left: auto; display: flex; gap: 6px; align-items: center; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 14px; letter-spacing: .01em; white-space: nowrap; }
+.brand-mark { width: 26px; height: 26px; border-radius: 7px; background: var(--amber); color: var(--amber-ink); display: grid; place-items: center; flex: 0 0 auto; }
+.brand-mark .icon { width: 16px; height: 16px; }
+
+/* ---------- pop-up menu ---------- */
+.menu {
+  position: absolute; left: 0; top: 40px; z-index: 30; display: none; min-width: 200px; padding: 5px;
+  background: var(--panel-3); border: 1px solid var(--line); border-radius: 9px; box-shadow: 0 16px 40px rgba(0, 0, 0, .45);
+}
+.menu.on { display: block; }
+.menu button { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 8px 11px; border-radius: 6px; cursor: pointer; font-size: 13.5px; }
+.menu button:hover { background: var(--panel-2); }
+.menu .danger { color: var(--danger); }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 2px; }
+
+/* ---------- dialog (dialog.js) ---------- */
+#dialog {
+  width: min(420px, calc(100vw - 32px)); padding: 22px 22px 18px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--text);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+#dialog::backdrop { background: rgba(0, 0, 0, .55); }
+#dialog h2 { margin: 0 0 8px; font-size: 17px; font-weight: 650; overflow-wrap: anywhere; }
+#dialog p { margin: 0 0 18px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+#dialog .field { width: 100%; margin: 6px 0 18px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; font-weight: 600; }
+.btn.danger:hover { filter: brightness(1.06); }
+
+/* ---------- toast and drop zone ---------- */
+#toast {
+  position: fixed; left: 50%; bottom: calc(100px + var(--safe-bottom)); z-index: 60; transform: translateX(-50%); max-width: 80vw;
+  padding: 11px 18px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-3);
+  font-size: 14.5px; box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+  opacity: 0; transition: opacity .25s; pointer-events: none;
+}
+#toast.on { opacity: 1; }
+
+#drop-zone {
+  position: fixed; inset: 0; z-index: 70; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(13, 17, 19, .88); border: 3px dashed var(--amber); font-size: 26px; font-weight: 600;
+}
+#drop-zone small { font-size: 15px; font-weight: 400; color: var(--muted); }
+#drop-zone.on { display: flex; }
+
+/* ---------- phones, tablets and narrow windows ----------
+   Layout follows the window's width (the 640px breakpoint below, matching util.isNarrow).
+   <html> also gets "compact" on phones and "touch" where touch is the main input (core.js),
+   for behaviour that depends on the device rather than the width. */
+.touch-only { display: none; }
+.touch .touch-only { display: block; }
+.compact .wide-only { display: none; }
+.touch .btn { min-height: 40px; }
+
+@media (max-width: 640px) {
+  /* App bar buttons show just their icon. The label is still read out by screen readers. */
+  .appbar { gap: 8px; padding-left: max(10px, var(--safe-left)); padding-right: max(8px, var(--safe-right)); }
+  .appbar .btn:has(.icon) { font-size: 0; gap: 0; padding: 8px; }
+  .appbar .btn:has(.icon) .icon { width: 20px; height: 20px; }
+  #toast { max-width: calc(100vw - 32px); text-align: center; }
+}
