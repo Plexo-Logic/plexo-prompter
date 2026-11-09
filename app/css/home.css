@@ -76,6 +76,8 @@
   flex: 0 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
   padding: 12px 24px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);
 }
+.start-footer .link { font-size: inherit; text-decoration: none; white-space: nowrap; }
+.start-footer .link:hover { text-decoration: underline; }
 
 /* The little animated prompter on the start screen. Fixed colours: it is an illustration. */
 .demo {
