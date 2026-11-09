@@ -108,8 +108,9 @@
    * @returns {{blocks: object[], html: string, words: string[], durations: number[], spoken: number[]}}
    *   words: normalised words for voice matching; durations: word units including the pause after
    *   each word; spoken: the part of each duration spent saying the word.
+   * `stop` labels a [PAUSE] that waits for the user, so a phone can say "tap" where a computer says "press Space".
    */
-  function parse(text) {
+  function parse(text, { stop = "Stop, press Space" } = {}) {
     const blocks = splitBlocks(text);
     const words = [];
     const spoken = [];
@@ -160,7 +161,7 @@
       if (block.type === "heading") {
         html += `<div class="heading"><span>${escapeHtml(block.text)}</span><span class="heading-time"></span></div>`;
       } else if (block.type === "pause") {
-        const label = block.seconds ? `Pause ${block.seconds}s` : "Stop, press Space";
+        const label = block.seconds ? `Pause ${block.seconds}s` : escapeHtml(stop);
         html += `<div class="pause-marker" data-seconds="${block.seconds || ""}">${label}</div>`;
       } else {
         block.firstWord = words.length;

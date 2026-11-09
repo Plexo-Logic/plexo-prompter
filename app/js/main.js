@@ -229,15 +229,20 @@
 
   // Hide the controls and cursor while the text is moving and nobody is touching anything.
   let idleTimer = 0;
-  const wake = () => {
-    document.body.classList.remove("idle");
+  const hideSoon = () => {
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       if (views.current() === "prompt" && prompter.isMoving()) document.body.classList.add("idle");
     }, 2500);
   };
+  const wake = () => {
+    document.body.classList.remove("idle");
+    hideSoon();
+  };
   document.addEventListener("pointermove", wake);
   document.addEventListener("pointerdown", wake);
+  // Starting with the space bar or a clicker, the mouse may never move: hide the controls all the same.
+  document.addEventListener("keydown", hideSoon);
 
   // Keep a phone or tablet screen on while the prompter is open.
   let wakeLock = null;

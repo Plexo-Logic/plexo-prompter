@@ -20,7 +20,7 @@
 
   function visibleScripts() {
     const query = $("#library-search").value.trim().toLowerCase();
-    const list = tab === "folder" ? library.folder().scripts : library.recent();
+    const list = tab === "folder" ? library.folder().scripts : library.all();
     if (!query) return list;
     return list.filter((s) => s.name.toLowerCase().includes(query) || s.text.toLowerCase().includes(query));
   }

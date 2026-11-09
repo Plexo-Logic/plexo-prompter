@@ -4,8 +4,9 @@
  *   folder   text files in a folder, either the launcher's Scripts folder or one the user linked
  *   sample   the built-in tutorial and guide (js/samples.js)
  *
- * A script is { id, name, text, source, updated?, opened?, mtime? }. Ids are prefixed with their
- * source ("saved:", "folder:", "sample:") so they never clash.
+ * A script is { id, name, text, source, updated?, opened?, dismissed?, mtime? }. Ids are prefixed
+ * with their source ("saved:", "folder:", "sample:") so they never clash. `dismissed` is when a saved
+ * script was taken off the start screen's Recent list; using it again later brings it back.
  */
 (function (Plexo) {
   "use strict";
@@ -31,19 +32,21 @@
         source: "saved",
         updated: Number(s.updated) || 0,
         opened: Number(s.opened) || 0,
+        dismissed: Number(s.dismissed) || 0,
       }));
   }
 
   let saved = loadSaved();
 
   function persist() {
-    const plain = saved.map(({ id, name, text, updated, opened }) => ({ id, name, text, updated, opened }));
+    const plain = saved.map(({ id, name, text, updated, opened, dismissed }) => ({ id, name, text, updated, opened, dismissed }));
     if (!storage.set(SAVED_KEY, plain)) toast("Couldn’t save: this browser’s storage is full.", 5000);
     changes.emit({ kind: "saved" });
   }
 
   const lastUsed = (s) => Math.max(s.opened || 0, s.updated || 0);
   const byRecent = (a, b) => lastUsed(b) - lastUsed(a);
+  const inRecent = (s) => lastUsed(s) > (s.dismissed || 0);
 
   /** A script name as stored: trimmed, never empty, and not too long. */
   const cleanName = (name) => (String(name).trim() || "Untitled script").slice(0, MAX_NAME_LENGTH);
@@ -100,6 +103,13 @@
     const script = saved.find((s) => s.id === id);
     if (!script) return;
     script.opened = Date.now();
+    persist();
+  }
+
+  /** Takes saved scripts off the Recent list (all of them when no id is given). They stay saved. */
+  function removeFromRecent(id = null) {
+    const now = Date.now();
+    for (const script of saved) if (!id || script.id === id) script.dismissed = now;
     persist();
   }
 
@@ -304,9 +314,11 @@
 
   Plexo.library = {
     /** Saved scripts, most recently opened or edited first. */
-    recent: (limit = Infinity) => saved.slice().sort(byRecent).slice(0, limit),
+    all: () => saved.slice().sort(byRecent),
+    /** The start screen's Recent list: the same order, minus scripts taken off it since they were last used. */
+    recent: (limit = Infinity) => saved.filter(inRecent).sort(byRecent).slice(0, limit),
     count: () => saved.length,
-    add, save, rename, duplicate, remove, markOpened, find, importFiles, download,
+    add, save, rename, duplicate, remove, markOpened, removeFromRecent, find, importFiles, download,
     tutorial,
     folder: () => folder,
     folderAvailable: () => folder.mode !== "none" || canLinkFolder(),

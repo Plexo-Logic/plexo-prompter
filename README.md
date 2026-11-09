@@ -6,9 +6,9 @@
 
 Free and open source. No account, no subscription, and your scripts never leave your device.
 
-**Try it now:** open [plexo-logic.github.io/plexo-prompter](https://plexo-logic.github.io/plexo-prompter/) in your browser, on a phone or a computer. There's nothing to install.
+**Try it now in your browser:** open [prompter.plexologic.com](https://prompter.plexologic.com/) on a phone or a computer. Nothing to download, nothing to install.
 
-**Or run it on your computer,** as below, for a Scripts folder that updates as you save files. You need Chrome or Edge, and Python, a free program that the starter offers to install for you.
+**Or download it to your computer,** as below, if you'd like it to pick up scripts from a folder as you save them. The download opens in Chrome or Edge and runs on Python, a free program. If your computer doesn't have Python yet, the starter offers to set it up for you.
 
 ---
 
@@ -36,7 +36,7 @@ The first time, your Mac may say it can't check the file. Open **System Settings
 
 ## Use it on your phone
 
-Open [plexo-logic.github.io/plexo-prompter](https://plexo-logic.github.io/plexo-prompter/) on your phone, then add it to your home screen:
+Open [prompter.plexologic.com](https://prompter.plexologic.com/) on your phone, then add it to your home screen:
 
 - **iPhone (Safari):** tap the **Share** button, then **Add to Home Screen**.
 - **Android (Chrome):** tap the **⋮** menu, then **Install app** (on some phones, **Add to Home screen**).
@@ -142,7 +142,7 @@ Found a problem? Please open an issue.
 - **Windows or Mac won't open the start file:** see the note under your system's steps above.
 - **My saved scripts are missing:** they're kept in the browser you used. If a message said a port was busy, close the program using it and start again, and they'll be back.
 - **Voice follow is greyed out:** use Chrome or Edge (Safari or Chrome on a phone), open the online version or start with the launcher, and allow the microphone.
-- **No Python at all?** Use the [online version](https://plexo-logic.github.io/plexo-prompter/). Or open `app/index.html` in Chrome or Edge, where everything except voice follow works.
+- **No Python at all?** Use the [online version](https://prompter.plexologic.com/). Or open `app/index.html` in Chrome or Edge, where everything except voice follow works.
 </details>
 
 <details>

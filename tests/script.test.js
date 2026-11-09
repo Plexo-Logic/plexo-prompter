@@ -81,3 +81,10 @@ test("helpers", () => {
   assert.equal(script.normaliseWord("Don’t!"), "dont");
   assert.ok(script.excerpt("# Title\n\nOne two three four").startsWith("One two"));
 });
+
+test("a stop marker says how to carry on on this device", () => {
+  const text = "One.\n\n[PAUSE]\n\nTwo.";
+  assert.match(script.parse(text).html, />Stop, press Space</);
+  assert.match(script.parse(text, { stop: "Stop, tap the screen" }).html, />Stop, tap the screen</);
+  assert.match(script.parse("[PAUSE 2]").html, />Pause 2s</);
+});

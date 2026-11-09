@@ -14,7 +14,7 @@
 (function (Plexo) {
   "use strict";
 
-  const { $, setHtml, raw, formatDuration, device } = Plexo.util;
+  const { $, setHtml, raw, formatDuration, device, pressToContinue } = Plexo.util;
   const { highlight } = Plexo;
   const prefs = Plexo.settings.values;
 
@@ -67,7 +67,7 @@
   function open(nextScript, { keepPlace = false } = {}) {
     const ratio = keepPlace && track.maxPos() ? pos / track.maxPos() : 0;
     script = nextScript;
-    parsed = Plexo.script.parse(script.text);
+    parsed = Plexo.script.parse(script.text, { stop: `Stop, ${pressToContinue}` });
     setHtml(el.text, raw(`${parsed.html}<div class="script-end">End</div>`));
     el.title.textContent = script.name;
     document.title = `${script.name} | Plexo Prompter`;

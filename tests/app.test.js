@@ -83,3 +83,20 @@ test("recent puts the last opened first", async () => {
   assert.equal(library.recent(1)[0].id, a.id);
   assert.equal(library.recent().length, 2);
 });
+
+test("scripts taken off Recent stay saved and come back when used again", async () => {
+  const { library } = loadApp();
+  const a = library.add("A", "a");
+  const b = library.add("B", "b");
+  library.removeFromRecent(a.id);
+  assert.deepEqual(library.recent().map((s) => s.id), [b.id]);
+  library.removeFromRecent();
+  assert.equal(library.recent().length, 0);
+  assert.equal(library.all().length, 2); // All scripts still has both
+  assert.equal(JSON.parse(localStorage.getItem("plexo.library")).length, 2);
+
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  library.markOpened(a.id);
+  library.save(b.id, "B", "b, edited");
+  assert.deepEqual(library.recent().map((s) => s.id), [b.id, a.id]);
+});
