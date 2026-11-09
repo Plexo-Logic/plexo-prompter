@@ -8,7 +8,7 @@ Free and open source. No account, no subscription, and your scripts never leave 
 
 **Try it now:** open [plexo-logic.github.io/plexo-prompter](https://plexo-logic.github.io/plexo-prompter/) in your browser, on a phone or a computer. There's nothing to install.
 
-**Or run it on your computer,** as below, for a Scripts folder that updates as you save files. You need Chrome or Edge, and Python (free).
+**Or run it on your computer,** as below, for a Scripts folder that updates as you save files. You need Chrome or Edge, and Python, a free program that the starter offers to install for you.
 
 ---
 
@@ -16,22 +16,20 @@ Free and open source. No account, no subscription, and your scripts never leave 
 
 1. **Download.** At the top of this page, click the green **Code** button, then **Download ZIP**.
 2. **Unzip.** In your Downloads folder, right-click the zip and choose **Extract All**.
-3. **Install Python.** Go to [python.org/downloads](https://www.python.org/downloads/), download it and install it with the standard options.
-4. **Start.** Open the Plexo Prompter folder and double-click **Start Plexo Prompter**.
+3. **Start.** Open the Plexo Prompter folder and double-click **Start Plexo Prompter**. If Python isn't on your computer yet, it explains why it's needed and offers to install it for you, which takes about a minute.
 
 The first time, Windows may ask if you're sure. Click **Run**, or **More info** then **Run anyway**.
 
 ## Start on Mac
 
 1. **Download.** At the top of this page, click the green **Code** button, then **Download ZIP**, and double-click the zip to open it.
-2. **Install Python.** Go to [python.org/downloads](https://www.python.org/downloads/), download the macOS installer and click through it.
-3. **Start.** Open the Plexo Prompter folder and double-click **Start Plexo Prompter**.
+2. **Start.** Open the Plexo Prompter folder and double-click **Start Plexo Prompter**. If Python isn't on your Mac yet, it offers to download the official installer. Click through it, and the prompter starts by itself when it's done.
 
 The first time, your Mac may say it can't check the file. Open **System Settings**, then **Privacy & Security**, scroll down and click **Open Anyway**. A small Terminal window opens with the prompter: leave it open while you record.
 
 ## Start on Linux
 
-1. **Download** the ZIP (green **Code** button) and extract it. Python is usually already installed.
+1. **Download** the ZIP (green **Code** button) and extract it. Python is usually already installed. If it isn't, the starter tells you the command to install it.
 2. **Start.** Double-click **Start Plexo Prompter.sh** and choose **Run**. If it opens as text instead, right-click in the folder, choose **Open in Terminal**, type `python3 prompter_server.py` and press Enter.
 
 **After that,** just double-click **Start Plexo Prompter** whenever you want to record, and close the prompter window when you're done.
@@ -140,7 +138,7 @@ Found a problem? Please open an issue.
 <details>
 <summary><b>Troubleshooting</b></summary>
 
-- **"Plexo Prompter needs Python":** install Python from python.org, then start it again.
+- **"Plexo Prompter needs Python":** say yes when the starter offers to install it, or install it from [python.org](https://www.python.org/downloads/), then start it again.
 - **Windows or Mac won't open the start file:** see the note under your system's steps above.
 - **My saved scripts are missing:** they're kept in the browser you used. If a message said a port was busy, close the program using it and start again, and they'll be back.
 - **Voice follow is greyed out:** use Chrome or Edge (Safari or Chrome on a phone), open the online version or start with the launcher, and allow the microphone.

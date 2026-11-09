@@ -232,7 +232,9 @@
 
   /** Starts watching for changes: the launcher every 2 seconds, a linked folder every 3. */
   async function startWatching() {
-    if (location.protocol.startsWith("http") && (await pollLauncher())) {
+    // The launcher only ever runs on this computer, so there's no point asking anywhere else.
+    const fromLauncher = ["127.0.0.1", "localhost"].includes(location.hostname);
+    if (fromLauncher && (await pollLauncher())) {
       setInterval(pollLauncher, 2000);
       return;
     }
