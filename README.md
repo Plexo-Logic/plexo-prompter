@@ -2,7 +2,9 @@
 
 **A free teleprompter for your computer and phone.** Put your script under your camera, press play, and talk to camera like a pro.
 
-![Plexo Prompter scrolling a script, with the word being read highlighted on the reading line](docs/images/prompter.png)
+[![Watch the one-minute tour of Plexo Prompter on YouTube](docs/images/video.jpg)](https://www.youtube.com/watch?v=SWZ4KDJE61Q)
+
+[Watch the one-minute tour on YouTube](https://www.youtube.com/watch?v=SWZ4KDJE61Q)
 
 Free and open source. No account, no subscription, and your scripts never leave your device.
 
@@ -75,6 +77,8 @@ Pick up recent scripts, search the library, or drop text files into the **Script
 ---
 
 ## What it does
+
+![Plexo Prompter scrolling a script, with the word being read highlighted on the reading line](docs/images/prompter.png)
 
 - **Three ways to scroll:** auto-scroll, voice follow (moves as you speak), or a presentation clicker
 - **Word highlight:** a box that glides from word to word, or karaoke-style colour
